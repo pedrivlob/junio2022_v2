@@ -28,3 +28,40 @@ application {
     // Define the main class for the application.
     mainClass = 'junio2022_v2.App'
 }
+
+
+test {
+	useJUnitPlatform()
+	testLogging {
+		events "passed", "skipped", "failed"
+	}
+}
+
+
+//Para publicar paquetes en github
+//group = 'A4I'
+publishing {
+    repositories {
+        maven {
+            name = "GitHubPackages"
+            url = uri("https://github.com/pedrivlob/junio2022_v2-api")
+            credentials {
+            //las propiedades gpr.user y gpr.key est�n configuradas en gradle.properties en el raiz del proyecto, y se a�ade a .gitignore para que no se suban
+                username = project.findProperty("gpr.user") ?: System.getenv("GITHUB_USERNAME")
+                password = project.findProperty("gpr.key") ?: System.getenv("GITHUB_TOKEN")
+                }
+        }
+    }
+    publications {
+        gpr(MavenPublication) {
+         //Del tutorial https://docs.gradle.org/current/userguide/publishing_maven.html#publishing_maven
+        
+            groupId = 'us.mitfs.samples'
+            artifactId = 'pedrivlob'
+            version = '0.0'
+
+            from components.java
+        }
+       
+    }
+}
